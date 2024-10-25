@@ -11,6 +11,18 @@ app.listen(port, () => {
 
 client.connect;
 
+app.post('/', async (req, res) => {
+    const user = req.body
+    const userQuery = await client.query(`SELECT * FROM drivers WHERE email = '${user.email}' AND pass = '${user.pass}'`)
+
+    if(userQuery.rows.length === 0) {
+        return res.send('Email ou Senha incorretos!')
+    } else {
+        res.send('Login realizado com sucesso!')
+    }
+
+})
+
 app.post('/cadastro', (req, res) => {
     const user = req.body
     console.log(user)
