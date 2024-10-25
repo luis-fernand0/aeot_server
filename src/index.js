@@ -1,10 +1,8 @@
 const express = require('express')
 const client = require('./db.js')
-const bodyparser = require('body-parser')
-
 
 const app = express()
-app.use(bodyparser.json())
+app.use(express.json())
 const port = 3000
 
 app.listen(port, () => {
@@ -13,32 +11,23 @@ app.listen(port, () => {
 
 client.connect;
 
-app.get('/cadastro', (req, res) => {
-    client.query('SELECT * FROM drivers', (err, result) => {
-        if(!err) {
-            console.log(result.rows)
-            res.send(result.rows);
-        }
-    });
-    client.end;
-})
-
 app.post('/cadastro', (req, res) => {
     const user = req.body
     console.log(user)
-    const insertQuery = `INSERT INTO drivers VALUES (
-        ${user.code}, 
-        ${user.full_name}, 
-        ${user.phone}, 
-        ${user.pass}, 
-        ${user.car_plate}, 
-        ${user.car_model} 
+    const insertQuery = `INSERT INTO drivers (full_name, email, phone, pass, car_plate, car_model) VALUES ( 
+        '${user.full_name}',
+        '${user.email}', 
+        '${user.phone}', 
+        '${user.pass}', 
+        '${user.car_plate}', 
+        '${user.car_model}' 
         )`
+        console.log(insertQuery)
+
 
     client.query(insertQuery, (err, reuslt) => {
         if(!err) {
-            res.send(`Insertion in table sucessful!`)
-            res.send(`Datas insert ${user}`)
+            res.send(`Você foi cadastrado! Retorne a pagina de login!`)
         } else {
             console.log(err.message)
         }
