@@ -1,7 +1,9 @@
 const express = require('express')
+const cors = require('cors')
 const client = require('./db.js')
 
 const app = express()
+app.use(cors())
 app.use(express.json())
 const port = 3000
 
@@ -11,21 +13,23 @@ app.listen(port, () => {
 
 client.connect;
 
-app.post('/', async (req, res) => {
+app.post('/', async (req, res, next) => {
     const user = req.body
-    const userQuery = await client.query(`SELECT * FROM drivers WHERE email = '${user.email}' AND pass = '${user.pass}'`)
+    const userQuery = await client.query(`SELECT * FROM drivers WHERE email = '${user.email_login}' AND pass = '${user.password_login}'`) //seria algo aqui ?
 
     if(userQuery.rows.length === 0) {
+        // console.log(user) teste para ver a requisição 
+        // console.log(userQuery.command) teste para ver o comando SQL(não foi possivel ver)
         return res.send('Email ou Senha incorretos!')
-    } else {
-        res.send('Login realizado com sucesso!')
     }
+
+    res.send('Login realizado com sucesso!')
 
 })
 
 app.post('/cadastro', (req, res) => {
     const user = req.body
-    console.log(user)
+    // console.log(user)
     const insertQuery = `INSERT INTO drivers (full_name, email, phone, pass, car_plate, car_model) VALUES ( 
         '${user.full_name}',
         '${user.email}', 
